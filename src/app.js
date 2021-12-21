@@ -4,12 +4,12 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 
 // ERRORS HANDLERS
-// const errorHandler = require('./middlewares/error-handler');
-// const notFoundHandler = require('./middlewares/not-found-handler');
+const errorHandler = require('./middlewares/error-handler');
+const notFoundHandler = require('./middlewares/not-found-handler');
 
 // ROUTERS
-// const authRouter = require('./routes/auth-routes');
-// const userRouter = require('./routes/user-routes');
+const authRouter = require('./routes/auth-routes');
+const userRouter = require('./routes/user-routes');
 
 // INITILIZE APP
 const app = express();
@@ -30,9 +30,9 @@ app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
 // ROUTES
-// app.use('/api/v1/auth', authRouter);
-// app.use('/api/v1/users', userRouter);
-// app.use(notFoundHandler);
-// app.use(errorHandler);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 module.exports = app;
