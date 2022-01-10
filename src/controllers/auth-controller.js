@@ -8,7 +8,7 @@ const utils = require('../utils');
  * @route POST /api/v1/auth/register
  * @access public
  */
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   // 1. simple check for valid input
   const { name, email, password, passwordConfirm } = req.body;
   if (!name || !email || !password) {
@@ -27,15 +27,16 @@ const register = async (req, res) => {
   }
 
   // 3. create new account
-  const user = await User.create({ name, email, password, role: 'admin' });
+  const user = await User.create({ name, email, password });
 
   // 4. send token to client
   const payload = utils.createUserTokenPayload(user);
   const token = utils.createToken(payload);
   utils.attachCookiesToResponse(res, token);
 
-  user.password = undefined;
-  res.status(StatusCodes.CREATED).json({ status: 'success', user });
+  req.user = user;
+  // res.status(StatusCodes.CREATED).json({ status: 'success', user });
+  next();
 };
 
 /**
@@ -52,7 +53,7 @@ const login = async (req, res) => {
   }
 
   // 2. check if user exists (valid email) and password is correct
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('-calendarList');
   if (!user || !(await user.comparePassword(password))) {
     throw new customError.UnauthenticatedError('Incorrect Email or Password');
   }
@@ -68,7 +69,7 @@ const login = async (req, res) => {
 
 /**
  * Log out user
- * @route GET /api/v1/auth/logout
+ * @route POST /api/v1/auth/logout
  * @access public
  */
 const logout = async (req, res) => {

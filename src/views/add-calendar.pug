@@ -1,0 +1,26 @@
+extends base
+
+block style
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css' integrity='sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==' crossorigin='anonymous' referrerpolicy='no-referrer')
+  link(rel='stylesheet' href='/css/main.css')
+  link(rel='stylesheet' href='/css/crud.css')
+  link(rel='stylesheet' href='/css/alert.css')
+
+block content
+  form#form-add
+    .content
+      input.title(type='text' placeholder='Tiêu đề lịch')#title
+      .spacer
+      .spacer
+      .desc
+        i.fas.fa-sticky-note
+        input.input-desc(type='text' placeholder='Thêm mô tả')#description
+      .button(style="margin-top: 20px")
+        a.btn.red-btn(href=`/`) Hủy
+        button.btn.blue-btn.ting(type='submit' id=`${calendarID}`) Lưu
+  script.
+    function ChangeText(oFileInput, sTargetID) {
+    document.getElementById(sTargetID).value = oFileInput.value;
+    }
+  script(src="/js/add-calendar.mjs" type='module')
+

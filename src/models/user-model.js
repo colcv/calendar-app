@@ -7,8 +7,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: [true, 'Please provide your name'],
-    minlength: [3, 'Name must have at least 3 characters'],
-    maxlength: [30, 'Name length limit is 30 characters'],
+    minlength: [5, 'User name must have at least 5 characters'],
+    maxlength: [50, 'User name length limit is 50 characters'],
   },
   email: {
     type: String,
@@ -27,17 +27,25 @@ const userSchema = new mongoose.Schema({
     enum: ['admin', 'user'],
     default: 'user',
   },
+  passwordChangedAt: Date,
   avatar: {
     type: String,
     default: '/uploads/example.jpeg',
   },
-  passwordChangedAt: {
-    type: Date,
-    select: false,
-  },
-  // calendarList: {
-  //
-  // }
+  calendarList: [
+    {
+      calendar: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Calendar',
+      },
+      otherTitle: String,
+      role: {
+        type: String,
+        enum: ['reader', 'writer', 'owner'],
+      },
+      isPrimary: Boolean,
+    },
+  ],
 });
 
 // MIDDLEWARES

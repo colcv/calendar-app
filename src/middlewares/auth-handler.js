@@ -13,7 +13,10 @@ const authenticateUser = async (req, res, next) => {
 
   // 2. Verify token
   // jwt.verify() throws error if signature is invalid (catched in global error handler)
-  const { name, userID, role, iat } = jwt.verify(token, process.env.JWT_SECRET);
+  const { name, email, userID, role, iat } = jwt.verify(
+    token,
+    process.env.JWT_SECRET
+  );
 
   // 3. Check if user still exist
   const currentUser = await User.findById(userID);
@@ -31,7 +34,7 @@ const authenticateUser = async (req, res, next) => {
   }
 
   // 5. Grant access to protected routes
-  req.user = { name, userID, role };
+  req.user = { name, email, userID, role };
   next();
 };
 
@@ -46,7 +49,38 @@ const authorizePermissions =
     next();
   };
 
+// Only for rendered pages, no errors!
+const checkLoggedIn = async (req, res, next) => {
+  const { token } = req.signedCookies;
+  if (token) {
+    // Verify token
+    // jwt.verify() throws error if signature is invalid (catched in global error handler)
+    const { userID, iat } = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Check if user still exist
+    const currentUser = await User.findById(userID).populate({
+      path: 'calendarList.calendar',
+    });
+
+    if (!currentUser) {
+      return next();
+    }
+
+    // 4. Check if user changed password AFTER the token was issued
+    if (currentUser.isPasswordChanged(iat)) {
+      return next();
+    }
+
+    // There is a logged in user
+    res.locals.user = currentUser;
+    req.user = currentUser;
+    return next();
+  }
+  next();
+};
+
 module.exports = {
   authenticateUser,
   authorizePermissions,
+  checkLoggedIn,
 };

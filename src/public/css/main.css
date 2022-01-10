@@ -1,0 +1,14 @@
+* {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 10px;
+}
+
+body {
+  background: #ffffff;
+  margin: 0;
+  font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+}

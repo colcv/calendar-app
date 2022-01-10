@@ -1,4 +1,7 @@
 const express = require('express');
+const {
+  createUserPrimaryCalendar,
+} = require('../controllers/user-calendar-controller');
 const userController = require('../controllers/user-controller');
 const authHandler = require('../middlewares/auth-handler');
 
@@ -6,17 +9,18 @@ const router = express.Router();
 
 // protect all routes after this middleware
 router.use(authHandler.authenticateUser);
-router.get('/me', userController.showCurrentUser);
-// TODO
-router.patch('/update-my-password', userController.updateCurrentUserPassword);
-router.patch('/update-me', userController.updateCurrentUser);
+router
+  .route('/me')
+  .get(userController.getCurrentUser)
+  .patch(userController.updateCurrentUser);
+router.route('/me/password').patch(userController.updateCurrentUserPassword);
 
 // only admin can access the following routes
 router.use(authHandler.authorizePermissions('admin'));
 router
   .route('/')
   .get(userController.getAllUsers)
-  .post(userController.createUser);
+  .post(userController.createUser, createUserPrimaryCalendar);
 router
   .route('/:id')
   .get(userController.getSingleUser)

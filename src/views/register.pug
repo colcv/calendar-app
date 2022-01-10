@@ -1,0 +1,61 @@
+extends base
+
+block style
+  link(rel='stylesheet' href='/css/s.css')
+  link(rel='stylesheet' href='/css/alert.css')
+
+block script
+  script(src='/js/validator.js')
+
+block content
+  .main
+    form#form-1.form
+      h2.heading Đăng ký
+      .spacer
+      .form-group
+        label.form-label(for='fullname') Họ Tên
+        input#name.form-control(name='fullname' type='text' placeholder='VD: Linh Dương')
+        span.form-message
+      .form-group
+        label.form-label(for='email') Email
+        input#email.form-control(name='email' type='text' placeholder='VD: email@domain.com')
+        span.form-message
+      .form-group
+        label.form-label(for='password') Mật khẩu
+        input#password.form-control(name='password' type='password' placeholder='Nhập mật khẩu')
+        span.form-message
+      .form-group
+        label.form-label(for='password_confirmation') Nhập lại mật khẩu
+        input#passwordConfirm.form-control(name='password_confirmation' placeholder='Nhập lại mật khẩu' type='password')
+        span.form-message
+      button.form-submit(type='submit') Đăng ký
+  script.
+    document.addEventListener('DOMContentLoaded', function () {
+    Validator({
+    form: '#form-1',
+    formGroupSelector: '.form-group',
+    errorSelector: '.form-message',
+    rules: [
+    Validator.isRequired(
+    '#fullname',
+    'Vui lòng nhập tên đầy đủ của bạn'
+    ),
+    Validator.isEmail('#email'),
+    Validator.minLength('#password', 6),
+    Validator.isRequired('#password_confirmation'),
+    Validator.isConfirmed(
+    '#password_confirmation',
+    function () {
+    return document.querySelector('#form-1 #password').value;
+    },
+    'Mật khẩu nhập lại không chính xác'
+    ),
+    ],
+    onSubmit: function (data) {
+    // Call API
+    console.log(data);
+    },
+    });
+    });
+
+  script(src='/js/register.mjs' type='module')

@@ -1,0 +1,101 @@
+extends base
+
+block style
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css' integrity='sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==' crossorigin='anonymous' referrerpolicy='no-referrer')
+  link(rel='stylesheet' href='/css/main.css')
+  link(rel='stylesheet' href='/css/p.css')
+  // link(rel='stylesheet' href='/css/crud.css')
+  link(rel='stylesheet' href='/css/alert.css')
+
+block script
+  script(src='/js/lunarCalendar.js')
+
+block content
+  .header
+    .logo
+      img(src='/img/calendar-alt-regular.svg' alt='')
+      div Lịch
+    script.
+      document.writeln(printSelectedMonth3());
+    .sp
+    - if (user)
+      .dropdown
+        .user
+          img(src='/img/usericon.png')
+          .username= user.name
+        .dropdown-content
+          a.a-3(href='#' id='logout') Đăng xuất
+    - else
+      .dropdown
+        .user
+          img(src='/img/usericon.png')
+        .dropdown-content
+          a.a-3(href='/login') Đăng nhập
+          a.a-3(href='/register') Đăng ký
+
+  .content
+    .content-1
+      - if (user)
+        .dropdown
+          button.dropbtn Tạo
+          .dropdown-content
+            a.a-1(href=`/calendars/${calendarID}/add-event`) Sự kiện
+            a.a-2(href=`/calendars/${calendarID}/add-task`) Việc cần làm
+
+        .dropdown
+          button.dropbtn Lịch
+          .dropdown-content
+            a.a-3(href=`/calendars/${calendarID}/edit-calendar`) Chi tiết/Chỉnh sửa lịch
+            a.a-3(href=`/calendars/add-calendar`) Thêm lịch mới
+            a.a-e(href=`/calendars/${calendarID}/share-calendar`) Chia sẻ lịch
+
+      script.
+        setOutputSize("small");
+        document.writeln(printSelectedMonth());
+      if user
+        .my-cal
+          .cal-title Lịch của tôi
+          .cal-content
+            form
+              each calendar in calendarList
+                - if (calendar.role !== 'owner')
+                  - if (String(calendar.calendar._id) === calendarID)
+                    label
+                      input.my-calendar(type='radio' name='radio' id=`${calendar.calendar._id}` checked=true)
+                      span= calendar.otherTitle
+                  - else
+                    label
+                      input.my-calendar(type='radio' name='radio' id=`${calendar.calendar._id}`)
+                      span= calendar.otherTitle
+                - else
+                  - if (String(calendar.calendar._id) === calendarID)
+                    label
+                      input.my-calendar(type='radio' name='radio' id=`${calendar.calendar._id}` checked=true)
+                      span= calendar.calendar.title
+                  - else
+                    label
+                      input.my-calendar(type='radio' name='radio' id=`${calendar.calendar._id}`)
+                      span= calendar.calendar.title
+        button.dropbtn#import-calendar Import Lịch
+
+    .content-2
+      .calendar-container
+        script.
+          const events = !{jsStringify(events)};
+          const tasks = !{jsStringify(tasks)};
+          const calendarID = !{jsStringify(calendarID)};
+          document.writeln(printSelectedMonth2(events, calendarID, tasks));
+
+    script(src='/js/change-calendar.mjs' type='module')
+    script(src='/js/login.mjs' type='module')
+    script(src='/js/event.mjs' type='module')
+
+  .popup#import-calendar-popup
+    span.close ×
+    form#form-import
+      .content
+        input.title(type='text' placeholder='Calendar ID')#calendar-id-import
+        .button
+          button.btn.blue-btn(type='submit')#import-btn Import lịch
+
+  script(src='/js/import-calendar.mjs', type='module')

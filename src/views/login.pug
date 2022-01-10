@@ -1,0 +1,45 @@
+extends base
+
+block style
+  link(rel='stylesheet' href='/css/s.css')
+  link(rel='stylesheet' href='/css/alert.css')
+
+block script
+  script(src='/js/validator.js')
+
+block content
+  .main
+    form#form-2.form
+      h2.heading Đăng nhập
+      .spacer
+      .form-group
+        label.form-label(for='email') Email
+        input#email.form-control(name='email' type='text' placeholder='VD: email@domain.com')
+        span.form-message
+      .form-group
+        label.form-label(for='password') Mật khẩu
+        input#password.form-control(name='password' type='password' placeholder='Nhập mật khẩu')
+        span.form-message
+      button.form-submit(type='submit') Đăng nhập
+      .spacer
+      .desc
+        | Bạn chưa có tài khoản? 
+        a(href='/register') Đăng ký
+
+  script.
+    document.addEventListener('DOMContentLoaded', function () {
+    Validator({
+    form: '#form-2',
+    formGroupSelector: '.form-group',
+    errorSelector: '.form-message',
+    rules: [
+    Validator.isEmail('#email'),
+    Validator.minLength('#password', 6),
+    ],
+    onSubmit: function (data) {
+    // Call API
+    console.log(data);
+    },
+    });
+    });
+  script(src='/js/login.mjs' type='module')

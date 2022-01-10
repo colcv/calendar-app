@@ -8,7 +8,7 @@ const customError = require('../errors');
  * @route POST /api/v1/users
  * @access protected
  */
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   // 1. simple check for valid input
   const { name, email, password, passwordConfirm } = req.body;
   if (!name || !email || !password) {
@@ -27,37 +27,35 @@ const createUser = async (req, res) => {
   }
 
   // 3. create new user account
-  const user = await User.create({ name, email, password, role: 'user' });
+  const user = await User.create({ name, email, password });
 
-  // 4. response
-  user.password = undefined;
-  res.status(StatusCodes.CREATED).json({ status: 'success', user });
+  // 4. to the next middleware
+  req.user = user;
+  next();
 };
 
 /**
- * Get all users except Admin
+ * Get all users
  * Only Admin can access this route
  * @route GET /api/v1/users
  * @access protected
  */
 const getAllUsers = async (req, res) => {
-  const users = await User.find({ role: 'user' }).select('-password');
+  const users = await User.find().select('-password -calendarList');
   res
     .status(StatusCodes.OK)
     .json({ status: 'success', results: users.length, users });
 };
 
 /**
- * Get a single user except Admin
+ * Get a single user
  * Only Admin can access this route
  * @route GET /api/v1/users/:id
  * @access protected
  */
 const getSingleUser = async (req, res) => {
   const { id: userID } = req.params;
-  const user = await User.findOne({ _id: userID, role: 'user' }).select(
-    '-password'
-  );
+  const user = await User.findById(userID).select('-password -calendarList');
   if (!user) {
     throw new customError.NotFoundError(`No user with ID: ${userID}`);
   }
@@ -86,6 +84,7 @@ const updateUser = async (req, res) => {
   await user.save(); // use save() to trigger middleware in mongoose
 
   user.password = undefined;
+  user.calendarList = undefined;
   res.status(StatusCodes.OK).json({ status: 'success', user });
 };
 
@@ -100,10 +99,7 @@ const deleteUser = async (req, res) => {
   const user = await User.findById(userID);
   if (!user) {
     throw new customError.NotFoundError(`No user with ID: ${userID}`);
-  } else if (user.role === 'admin') {
-    throw new customError.BadRequestError("You can't delete an Admin account");
   }
-
   await User.findByIdAndDelete(userID);
   res.status(StatusCodes.OK).json({
     status: 'success',
@@ -116,15 +112,15 @@ const deleteUser = async (req, res) => {
  * @route GET /api/v1/users/me
  * @access protected
  */
-const showCurrentUser = async (req, res) => {
+const getCurrentUser = async (req, res) => {
   const { userID } = req.user;
-  const user = await User.findById(userID).select('-password');
+  const user = await User.findById(userID).select('-password -calendarList');
   res.status(StatusCodes.OK).json({ status: 'success', user });
 };
 
 /**
  * Change password of current user
- * @route PATCH /api/v1/users/updateMyPassword
+ * @route PATCH /api/v1/users/me/password
  * @access protected
  * @todo
  */
@@ -134,7 +130,7 @@ const updateCurrentUserPassword = async (req, res) => {
 
 /**
  * Update current user's information
- * @route PATCH /api/v1/users/updateMe
+ * @route PATCH /api/v1/users/me
  * @access protected
  * @todo
  */
@@ -148,7 +144,7 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
-  showCurrentUser,
-  updateCurrentUserPassword, // todo
-  updateCurrentUser, // todo
+  getCurrentUser,
+  updateCurrentUserPassword, // @todo
+  updateCurrentUser, // @todo
 };

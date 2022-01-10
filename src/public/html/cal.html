@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/p.css" />
+  </head>
+  <body>
+    <script
+      type="text/javascript"
+      language="JavaScript"
+      src="/js/lunarCalendar.js"
+    ></script>
+    <div class="header">
+      <div class="logo">
+        <img src="/img/calendar-alt-regular.svg" alt="" />
+        <div>Lịch</div>
+      </div>
+      <script language="JavaScript">
+        <!--
+        document.writeln(printSelectedMonth3());
+        -->
+      </script>
+      <div class="sp"></div>
+      <div class="dropdown">
+        <div class="user">
+          <img src="/img/usericon.png" />
+          <div class="username">Linh Dương</div>
+        </div>
+        <div class="dropdown-content">
+          <a class="a-3" href="#">Đăng xuất</a>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="content-1">
+        <div class="dropdown">
+          <button class="dropbtn">Tạo</button>
+          <div class="dropdown-content">
+            <a class="a-1" href="#">Sự kiện</a>
+            <a class="a-2" href="#">Việc cần làm</a>
+          </div>
+        </div>
+        <script language="JavaScript">
+          <!--
+          setOutputSize("small");
+          document.writeln(printSelectedMonth());
+          -->
+        </script>
+        <div class="my-cal">
+          <div class="cal-title">Lịch của tôi</div>
+          <div class="cal-content">
+            <form>
+              <label>
+                <input type="radio" name="radio" />
+                <span>Lịch 1</span>
+              </label>
+              <label>
+                <input type="radio" name="radio" />
+                <span>Lịch 2</span>
+              </label>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="content-2">
+        <div class="calendar-container">
+          <script language="JavaScript">
+            <!--
+            // setOutputSize("small");
+            document.writeln(printSelectedMonth2());
+            -->
+          </script>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

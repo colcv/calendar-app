@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/crud.css" />
+    <title>Event</title>
+  </head>
+  <body>
+    <form action="" id="form-add">
+      <div class="content">
+        <input type="text" class="title" placeholder="Tiêu đề" />
+        <br />
+        <div class="spacer"></div>
+        <input type="date" class="date" />
+        <input type="time" class="time" />
+        tới
+        <input type="date" class="date" placeholder="" />
+        <input type="time" class="time" />
+        <br />
+        <div class="spacer"></div>
+        <div class="location">
+          <i class="fas fa-map-marker-alt"></i>
+          <input class="input-lo" type="text" placeholder="Thêm vị trí" />
+        </div>
+        <div class="spacer"></div>
+        <div class="color">
+          <i class="fas fa-palette"></i>
+
+          <input type="radio" name="color" id="red" value="red" />
+          <label for="red"><span class="red"></span></label>
+
+          <input type="radio" name="color" id="blue" />
+          <label for="blue"><span class="blue"></span></label>
+
+          <input type="radio" name="color" id="yellow" />
+          <label for="yellow"><span class="yellow"></span></label>
+        </div>
+        <div class="spacer"></div>
+        <div class="file">
+          <i class="fas fa-file-upload"></i>
+          <input
+            id="txt"
+            type="text"
+            class="input-file"
+            placeholder="Thêm tài liệu"
+            onclick="javascript:document.getElementById('file').click();"
+          />
+          <input
+            id="file"
+            type="file"
+            style="visibility: hidden"
+            name="img"
+            onchange="ChangeText(this, 'txt');"
+          />
+        </div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <div class="link">
+          <i class="fas fa-link"></i>
+          <input
+            type="url"
+            name="link"
+            id="link"
+            class="input-link"
+            placeholder="Thêm liên kết"
+          />
+        </div>
+        <div class="spacer"></div>
+        <div class="desc">
+          <i class="fas fa-sticky-note"></i>
+          <input class="input-desc" type="text" placeholder="Thêm mô tả" />
+        </div>
+      </div>
+      <div class="content">
+        <div class="guest">
+          <i class="fas fa-user-friends"></i>
+          <input class="input-guest" type="email" placeholder="Thêm khách" />
+        </div>
+        <div class="spacer"></div>
+        <div class="per">
+          <p>Quyền của khách</p>
+          <input type="checkbox" id="per1" name="per1" />
+          <label for="per1"> Sửa đổi sự kiện</label><br />
+          <input type="checkbox" id="per2" name="per2" />
+          <label for="per2"> Mời những người khác</label><br />
+          <input type="checkbox" id="per3" name="per3" />
+          <label for="per3"> Xem danh sách khách mời</label><br />
+        </div>
+        <div class="button">
+          <div class="btn red-btn">Hủy</div>
+          <div class="btn blue-btn" type="submit">Lưu</div>
+        </div>
+      </div>
+    </form>
+  </body>
+  <script>
+    function ChangeText(oFileInput, sTargetID) {
+      document.getElementById(sTargetID).value = oFileInput.value;
+    }
+  </script>
+</html>
